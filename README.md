@@ -41,13 +41,29 @@ variable path berisikan direktori FUSE, kemudian diiterasi dan dimasukkan ke dal
 ``` 
 #### 2. Membuat handling untuk melakukan fungsi play dan pause
 ```c
-if(in==1 && flag == 0){ //play
-    pthread_mutex_unlock(&play);
-    flag = 1;
+while(songNum == -1){
+    do{
+        printf("Choose the song : (play song_name)\n");
+        scanf("%s ", inputs);
+        scanf("%[^\n]s", songName);
+    }while(strcmp(inputs, "play") != 0);
+    for (int i = 0; i < count; i++)
+    {
+        if(strcmp(listMp3[i].mp3Name, songName) == 0){
+            songNum = i;
+            break;
+        }
+    }
 }
-if(in==2 && flag == 1){ //pause
-    pthread_mutex_lock(&play);
+```
+```c
+if(strcmp(input,"continue") == 0 && flag == 1){ //play
+    pthread_mutex_unlock(&play);
     flag = 0;
+}
+else if(strcmp(input,"pause") == 0 && flag == 0){ //pause
+    pthread_mutex_lock(&play);
+    flag = 1;
 }
 ```
 ```
@@ -55,7 +71,7 @@ Memanfaatkan mutex untuk melakukan lock dan unlock.
 ```
 #### 3. Membuat handling untuk melakukan fungsi untuk next dan prev
 ```c
-if(in==3){ //next
+else if(strcmp(input,"next") == 0){ //next
     pthread_cancel(tmp_thread);
     songNum++;
     if(songNum >= count) songNum = 0;
@@ -63,7 +79,7 @@ if(in==3){ //next
     pthread_create(&(tid[0]),NULL,&player,NULL);
     pthread_mutex_unlock(&play);
 }
-if(in==4){ //prev
+else if(strcmp(input,"prev") == 0){ //prev
     pthread_cancel(tmp_thread);
     songNum--;
     if(songNum <= 0) songNum = count - 1;
@@ -95,10 +111,23 @@ Iterasi mp3 yang ada di dalam array.
 ```
 #### 5. Modifikasi tambahan untuk memilih lagu berdasarkan Song Number
 ```c
-if(in==5){ //choose song
+else if(strcmp(input,"choose") == 0){ //choose song
     listSong();
-    printf("Choose the number of song : ");
-    scanf("%d", &songNum);
+    songNum = -1;
+    while(songNum == -1){
+        do{
+            printf("Choose the song : (play song_name)\n");
+            scanf("%s ", inputs);
+            scanf("%[^\n]s", songName);
+        }while(strcmp(inputs, "play") != 0);
+        for (int i = 0; i < count; i++)
+        {
+            if(strcmp(listMp3[i].mp3Name, songName) == 0){
+                songNum = i;
+                break;
+            }
+        }
+    }
     pthread_cancel(tmp_thread);
     pthread_mutex_unlock(&play);
     pthread_create(&(tid[0]),NULL,&player,NULL);
@@ -106,7 +135,7 @@ if(in==5){ //choose song
 }
 ```
 ```
-Melakukan scan kembali untuk Song Number, kemudian membuat thread baru.
+Melakukan scan kembali untuk play song_name, kemudian membuat thread baru.
 ```
 
 
