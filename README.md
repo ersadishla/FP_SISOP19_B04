@@ -39,7 +39,7 @@ void playlist(char path[]){
 ```
 variable path berisikan direktori FUSE, kemudian diiterasi dan dimasukkan ke dalam array listMp3.
 ``` 
-#### 2. Memodifikasi untuk melakukan fungsi play dan pause
+#### 2. Membuat handling untuk melakukan fungsi play dan pause
 ```c
 if(in==1 && flag == 0){ //play
     pthread_mutex_unlock(&play);
@@ -53,7 +53,7 @@ if(in==2 && flag == 1){ //pause
 ```
 Memanfaatkan mutex untuk melakukan lock dan unlock.
 ```
-#### 3. Memodifikasi untuk melakukan fungsi untuk next dan prev
+#### 3. Membuat handling untuk melakukan fungsi untuk next dan prev
 ```c
 if(in==3){ //next
     pthread_cancel(tmp_thread);
@@ -298,3 +298,5 @@ Setiap menjalankan fungsi di atas
 maka akan melakukan pencarian path aslinya dengan menggunakan fungsi search  
 yang mengembalikan nilai path aslinya, jika file mp3 ada di tree
 ```
+
+### Sekian, Terima Kasih
