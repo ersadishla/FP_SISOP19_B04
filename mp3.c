@@ -34,7 +34,7 @@ pthread_mutex_t play;
 pthread_t tmp_thread;
 
 void playlist(char path[]){
-    DIR *dp;
+    	DIR *dp;
 	struct dirent *dir;
 
 	dp = opendir(path);
@@ -132,17 +132,17 @@ void* player(void* input)
 
 }
 int main(int argc, char **argv){
-    char path[1000];
-    strcpy(path, argv[1]);
+	char path[1000];
+	strcpy(path, argv[1]);
 
-    playlist(path);
+	playlist(path);
 
-    pthread_t tid[1];
-    listSong();
-    printf("Choose the number of song : ");
-    scanf("%d", &songNum);
-    printf("Now Playing : %d. %s\n", songNum, listMp3[songNum].mp3Name);
-    printf("Type 9 For HELP\n");
+	pthread_t tid[1];
+	listSong();
+	printf("Choose the number of song : ");
+	scanf("%d", &songNum);
+	printf("Now Playing : %d. %s\n", songNum, listMp3[songNum].mp3Name);
+	printf("Type 9 For HELP\n");
 	pthread_create(&(tid[0]),NULL,&player,NULL);
 
 
@@ -152,45 +152,45 @@ int main(int argc, char **argv){
 
 		if(in==1 && flag == 0){ //play
 			pthread_mutex_unlock(&play);
-            flag = 1;
-        }
+            		flag = 1;
+        	}
 		if(in==2 && flag == 1){ //pause
 			pthread_mutex_lock(&play);
-            flag = 0;
-        }
-        if(in==3){ //next
-            pthread_cancel(tmp_thread);
-            songNum++;
-            if(songNum >= count) songNum = 0;
-            pthread_mutex_unlock(&play);
-            pthread_create(&(tid[0]),NULL,&player,NULL);
-            pthread_mutex_unlock(&play);
-        }
-        if(in==4){ //prev
-            pthread_cancel(tmp_thread);
-            songNum--;
-            if(songNum <= 0) songNum = count - 1;
-            pthread_mutex_unlock(&play);
-            pthread_create(&(tid[0]),NULL,&player,NULL);
-            pthread_mutex_unlock(&play);
-        }
-        if(in==5){ //choose song
-            listSong();
-            printf("Choose the number of song : ");
-            scanf("%d", &songNum);
-            pthread_cancel(tmp_thread);
-            pthread_mutex_unlock(&play);
-            pthread_create(&(tid[0]),NULL,&player,NULL);
-            pthread_mutex_unlock(&play);
-        }
-        if(in==8){
-            listSong();
-        }
-        if(in==9){
-            help();
-        }
-        printf("Now Playing : %d. %s\n", songNum, listMp3[songNum].mp3Name);
-        printf("Type 9 For HELP\n");
+            		flag = 0;
+        	}
+		if(in==3){ //next
+		    pthread_cancel(tmp_thread);
+		    songNum++;
+		    if(songNum >= count) songNum = 0;
+		    pthread_mutex_unlock(&play);
+		    pthread_create(&(tid[0]),NULL,&player,NULL);
+		    pthread_mutex_unlock(&play);
+		}
+		if(in==4){ //prev
+		    pthread_cancel(tmp_thread);
+		    songNum--;
+		    if(songNum <= 0) songNum = count - 1;
+		    pthread_mutex_unlock(&play);
+		    pthread_create(&(tid[0]),NULL,&player,NULL);
+		    pthread_mutex_unlock(&play);
+		}
+		if(in==5){ //choose song
+		    listSong();
+		    printf("Choose the number of song : ");
+		    scanf("%d", &songNum);
+		    pthread_cancel(tmp_thread);
+		    pthread_mutex_unlock(&play);
+		    pthread_create(&(tid[0]),NULL,&player,NULL);
+		    pthread_mutex_unlock(&play);
+		}
+		if(in==8){
+		    listSong();
+		}
+		if(in==9){
+		    help();
+		}
+		printf("Now Playing : %d. %s\n", songNum, listMp3[songNum].mp3Name);
+		printf("Type 9 For HELP\n");
 	}
 	pthread_join(tid[0],NULL);
 	return 0;
