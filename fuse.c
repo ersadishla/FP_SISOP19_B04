@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <sys/time.h>
 
-static const char *dirpath = "/home/aeris/Music";
+static const char *dirpath = "/home/aeris";
 
 typedef struct Node 
 { 
@@ -91,7 +91,7 @@ char *search(node* root, const char key[])
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
 	char fpath[1000];
-    char *temp;
+    	char *temp;
 
 	if(strcmp(path,"/") == 0)
 	{
@@ -99,9 +99,9 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 		sprintf(fpath,"%s",path);
 	}
 	else {
-        temp = search(root, path);
-        sprintf(fpath, "%s", temp);
-    }
+	temp = search(root, path);
+	sprintf(fpath, "%s", temp);
+    	}
     int res;
     res = lstat(fpath, stbuf);
     if (res == -1){
@@ -115,10 +115,10 @@ static int xmp_readagain(const char *path, void *buf, fuse_fill_dir_t filler,
 		       off_t offset, struct fuse_file_info *fi)
 {
 
-    // MOUNT POINT, Important
-    if (strcmp(path, "/home/aeris/fp/mounted") == 0) return 0;
+	// MOUNT POINT, Important
+	if (strcmp(path, "/home/aeris/fp/mounted") == 0) return 0;
 
-    int res = 0;
+    	int res = 0;
 	DIR *dp;
 	struct dirent *dir;
 
@@ -151,13 +151,13 @@ static int xmp_readagain(const char *path, void *buf, fuse_fill_dir_t filler,
 
 	closedir(dp);
 
-    return 0;
+    	return 0;
 }
 
 static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		       off_t offset, struct fuse_file_info *fi)
 {
-    char fpath[1000];
+    	char fpath[1000];
 	if(strcmp(path, "/") == 0)
 	{
 		path = dirpath;
@@ -166,24 +166,24 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 	else sprintf(fpath, "%s%s", dirpath, path);
 	int res = 0;
     
-    res = xmp_readagain(fpath, buf, filler, offset, fi);
+    	res = xmp_readagain(fpath, buf, filler, offset, fi);
 	return 0;
 }
 
 static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
 {
-    char fpath[1000];
-    char *temp;
+	char fpath[1000];
+	char *temp;
 	if(strcmp(path,"/") == 0)
 	{
 		path=dirpath;
 		sprintf(fpath,"%s",path);
 	}
 	else {
-        temp = search(root, path);
-        sprintf(fpath, "%s", temp);
-    }
+		temp = search(root, path);
+		sprintf(fpath, "%s", temp);
+    	}
 	int res = 0;
   	int fd = 0 ;
 
@@ -191,22 +191,22 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 	fd = open(fpath, O_RDONLY);
 	if (fd == -1){
 		return -errno;
-    }
+    	}
 
 	res = pread(fd, buf, size, offset);
 	if (res == -1){
 		res = -errno;
-    }
+    	}
 
 	close(fd);
-    return res;
+    	return res;
 }
 
 static int xmp_statfs(const char *path, struct statvfs *stbuf)
 {
 	int res;
-    char fpath[1000];
-    char *temp;
+	char fpath[1000];
+	char *temp;
 	if(strcmp(path,"/") == 0)
 	{
 		path=dirpath;
@@ -215,7 +215,7 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
 	else {
         temp = search(root, path);
         sprintf(fpath, "%s", temp);
-    }
+	}
 	res = statvfs(fpath, stbuf);
 	if (res == -1)
 		return -errno;
@@ -227,7 +227,7 @@ static struct fuse_operations xmp_oper = {
 	.getattr	= xmp_getattr,
 	.readdir	= xmp_readdir,
 	.read		= xmp_read,
-    .statfs	    = xmp_statfs,
+	.statfs	    	= xmp_statfs,
 };
 
 int main(int argc, char *argv[])
